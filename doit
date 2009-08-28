@@ -1,2 +1,2 @@
 #!/bin/sh -v
-gcc -Wall `pkg-config --libs --cflags gtk+-2.0` -o play play.c
+gcc -Wall `pkg-config --libs --cflags cairo-png` -o play play.c

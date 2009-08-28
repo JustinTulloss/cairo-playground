@@ -36,7 +36,7 @@
 
 static cairo_surface_t *image;
 
-static int xc = 85, yc = 85;
+static int xc = 360, yc = 550;
 static int width = 0, height = 0;
 static int xshift = 1, yshift = 1;
 
@@ -49,7 +49,7 @@ draw(cairo_surface_t *surface)
     /* Now we have a clear context, draw our circle */
     xc += xshift;
     yc += yshift;
-    cairo_arc(cr, xc, yc, 10, 0, 2*M_PI);
+    cairo_arc(cr, xc, yc, 40, 0, 2*M_PI);
     cairo_set_source_rgb(cr, 1, 1, 1);
     cairo_set_line_width(cr, 4);
     /* We now have an outline, but we aren't done with the arc since we want
