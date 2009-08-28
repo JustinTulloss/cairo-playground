@@ -30,26 +30,21 @@
 #include <math.h>
 
 #include <cairo.h>
-#include <gtk/gtk.h>
 
 #define LEFT_BUTTON 1
 #define RIGHT_BUTTON 3
 
 static cairo_surface_t *image;
 
-static gint xc = 85, yc = 85;
-static gint width = 0, height = 0;
-static gint xshift = 1, yshift = 1;
+static int xc = 85, yc = 85;
+static int width = 0, height = 0;
+static int xshift = 1, yshift = 1;
 
-static gboolean
-on_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
+static int
+draw(cairo_surface_t *surface)
 {
     cairo_t *cr;
-    cr = gdk_cairo_create(widget->window);
-
-    /* Paint the background image first */
-    cairo_set_source_surface(cr, image, 0, 0);
-    cairo_paint(cr);
+    cr = cairo_create(surface);
 
     /* Now we have a clear context, draw our circle */
     xc += xshift;
@@ -83,58 +78,21 @@ on_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
         xshift = -xshift;
     }
 
-    return FALSE;
-}
-
-static gboolean
-clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_data)
-{
-    return TRUE;
-}
-
-static gboolean
-time_handler(GtkWidget *widget) {
-    if (widget->window == NULL)
-        return FALSE;
-
-    gtk_widget_queue_draw(widget);
-    return TRUE;
+    return 0;
 }
 
 int
 main(int argc, char *argv[])
 {
-    GtkWidget *window;
-
     image = cairo_image_surface_create_from_png("bg.png");
     width = cairo_image_surface_get_width(image);
     height = cairo_image_surface_get_height(image);
 
-    gtk_init(&argc, &argv);
-
-    window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-
-    gtk_widget_add_events(window, GDK_BUTTON_PRESS_MASK);
-
-    g_signal_connect(window, "expose-event",
-            G_CALLBACK(on_expose_event), NULL);
-    g_signal_connect(window, "destroy",
-            G_CALLBACK(gtk_main_quit), NULL);
-    g_signal_connect(window, "button-press-event",
-            G_CALLBACK(clicked), NULL);
-
-    gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
-    gtk_window_set_title(GTK_WINDOW(window), "Justin's KICKASS lines!");
-    gtk_window_set_default_size(GTK_WINDOW(window), width, height);
-    gtk_widget_set_app_paintable(window, TRUE);
-
-    g_timeout_add(2, (GSourceFunc) time_handler, (gpointer) window);
-
-    gtk_widget_show_all(window);
-
     printf("Starting with cairo version %s\n", cairo_version_string());
 
-    gtk_main();
+    draw(image);
+
+    cairo_surface_write_to_png(image, "output.png");
 
     cairo_surface_destroy(image);
 
