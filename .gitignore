@@ -2,4 +2,6 @@
 *.o
 *.so
 play
-output.png
+play-arm
+*out*.png
+tags

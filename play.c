@@ -84,15 +84,37 @@ draw(cairo_surface_t *surface)
 int
 main(int argc, char *argv[])
 {
+    char fname[255];
+
+    if (argc > 1) {
+        sprintf(fname, "%s/output.png", argv[1]);
+    }
+    else {
+        sprintf(fname, "output.png");
+    }
+
     image = cairo_image_surface_create_from_png("bg.png");
     width = cairo_image_surface_get_width(image);
     height = cairo_image_surface_get_height(image);
+
+    if (cairo_surface_status(image) != CAIRO_STATUS_SUCCESS) {
+        printf("There was a problem opening the surface: 0x%x\n",
+                cairo_surface_status(image));
+        return -1;
+    }
 
     printf("Starting with cairo version %s\n", cairo_version_string());
 
     draw(image);
 
-    cairo_surface_write_to_png(image, "output.png");
+    if (cairo_surface_status(image) != CAIRO_STATUS_SUCCESS) {
+        printf("There was a problem opening the surface: 0x%x\n",
+                cairo_surface_status(image));
+        return -1;
+    }
+
+    printf("Writing to %s\n", fname);
+    cairo_surface_write_to_png(image, fname);
 
     cairo_surface_destroy(image);
 

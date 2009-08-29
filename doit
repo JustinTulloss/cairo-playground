@@ -1,2 +1,5 @@
 #!/bin/sh -v
 gcc -Wall `pkg-config --libs --cflags cairo-png` -o play play.c
+arm-none-linux-gnueabi-gcc -Wall -lcairo -lpixman-1 -lpng -I$GRAPHICS_SDK/include/cairo -L$GRAPHICS_SDK/lib -o play-arm play.c
+
+novacom put file:///usr/lib/play/bin/play < ./play-arm

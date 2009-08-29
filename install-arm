@@ -1,0 +1,13 @@
+#!/bin/sh
+
+novacom run file:///usr/sbin/rootfs_open
+novacom run "file:///bin/mkdir -p /usr/lib/play/lib"
+novacom run "file:///bin/mkdir -p /usr/lib/play/bin"
+for file in $(ls $GRAPHICS_SDK/lib)
+do
+    novacom put file:///usr/lib/play/lib/$file < $GRAPHICS_SDK/lib/$file
+done
+
+novacom put file:///usr/lib/play/bin/bg.png < bg.png
+novacom put file:///usr/lib/play/bin/play < play-arm
+novacom put file:///usr/lib/play/bin/run-play < run-play
